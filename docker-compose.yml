@@ -1,0 +1,21 @@
+version: '3'
+services:
+    php:
+        build:
+            context: ./docker
+            dockerfile: php.Dockerfile
+        container_name: ${APP_NAME:?err}-php
+        volumes:
+            - './app:/var/www/html'
+
+    nginx:
+        image: nginx:1.21.0
+        container_name: ${APP_NAME:?err}-nginx
+        ports:
+            - '${APP_PORT:?3000}:80'
+            - '443:443'
+        links:
+            - 'php'
+        volumes:
+            - './app:/var/www/html'
+            - './config/nginx:/etc/nginx/conf.d'
